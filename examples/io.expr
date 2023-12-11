@@ -1,0 +1,7 @@
+## Are you able to vote? Program
+"Enter Your age: " outs
+in 18 = if
+    "You are eligible" outs
+else
+    "You are not eligible" outs
+end

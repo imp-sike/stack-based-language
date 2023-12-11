@@ -23,6 +23,11 @@ ADD = iota()
 SUB = iota()
 DUMP = iota()
 EQUAL = iota()
+GREATER_THAN = iota()
+SMALLER_THAN = iota()
+GREATER_THAN_EQUAL = iota()
+SMALLER_THAN_EQUAL = iota()
+NOT_EQUAL = iota()
 IFF = iota()
 ELSEF = iota()
 FI = iota()
@@ -44,6 +49,21 @@ def dump():
 
 def equals():
     return (EQUAL, 0)
+
+def greater_than():
+    return (GREATER_THAN, 0)
+
+def greater_then_equal():
+    return  (GREATER_THAN_EQUAL, 0)
+
+def smaller_then():
+    return (SMALLER_THAN, 0)
+
+def smaller_then_equal():
+    return  (SMALLER_THAN_EQUAL, 0)
+
+def not_equal():
+    return (NOT_EQUAL, 0)
 
 def iff():
     return (IFF, 0)
@@ -101,6 +121,16 @@ for c in range(len(programcode.split(" "))):
         program.append(dump())
     elif word == "=":
         program.append(equals())
+    elif word == ">":
+        program.append(greater_than())
+    elif word == "<":
+        program.append(smaller_then())
+    elif word == ">=":
+        program.append(greater_then_equal())
+    elif word == "<=":
+        program.append(smaller_then_equal())
+    elif word == "!=":
+        program.append(not_equal())
     elif word == "if":
         program.append(iff())
         stack_cross_reference.append(len(program) - 1)
@@ -238,10 +268,63 @@ for ip in range(len(program)):
         append("    pop rbx")
         append("    cmp rax, rbx")
         append("    ; sete is for equality ")
-        append("    sete al            ; Set AL to 1 if greater, 0 otherwise ")
+        append("    sete al            ; Set AL to 1 if equal, 0 otherwise ")
         append("    ; Push the result onto the stack")
         append("    push rax")
         append("")
+    elif instrn == NOT_EQUAL:
+        append("    ; Not Equals")
+        append("    pop rax")
+        append("    pop rbx")
+        append("    cmp rax, rbx")
+        append("    ; setne is for not equal ")
+        append("    setne al            ; Set AL to 1 if not equal, 0 otherwise ")
+        append("    ; Push the result onto the stack")
+        append("    push rax")
+        append("")
+    elif instrn == GREATER_THAN:
+        append("    ; Greater Than")
+        append("    pop rax")
+        append("    pop rbx")
+        append("    cmp rax, rbx")
+        append("    ; setg is for greater than ")
+        append("    setg al            ; Set AL to 1 if greater than, 0 otherwise ")
+        append("    ; Push the result onto the stack")
+        append("    push rax")
+        append("")
+    elif instrn == SMALLER_THAN:
+        append("    ; Smaller Than")
+        append("    pop rax")
+        append("    pop rbx")
+        append("    cmp rax, rbx")
+        append("    ; setl is for smaller than ")
+        append("    setl al            ; Set AL to 1 if smaller than, 0 otherwise ")
+        append("    ; Push the result onto the stack")
+        append("    push rax")
+        append("")
+
+    elif instrn == GREATER_THAN_EQUAL:
+        append("    ; Greater Than or Equal")
+        append("    pop rax")
+        append("    pop rbx")
+        append("    cmp rax, rbx")
+        append("    ; setge is for greater than or equal ")
+        append("    setge al            ; Set AL to 1 if greater than or equal, 0 otherwise ")
+        append("    ; Push the result onto the stack")
+        append("    push rax")
+        append("")
+
+    elif instrn == SMALLER_THAN_EQUAL:
+        append("    ; Smaller Than or Equal")
+        append("    pop rax")
+        append("    pop rbx")
+        append("    cmp rax, rbx")
+        append("    ; setle is for smaller than or equal ")
+        append("    setle al            ; Set AL to 1 if smaller than or equal, 0 otherwise ")
+        append("    ; Push the result onto the stack")
+        append("    push rax")
+        append("")
+
     elif instrn == IFF:
         append("   ; if statement starts ")
         append("   pop rax")

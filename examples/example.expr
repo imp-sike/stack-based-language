@@ -1,8 +1,0 @@
-1 1 = if 
-    3 1 +
-    "Sum is here" outs .
-else 
-    2 1 + .
-    4 1 + .
-fi
-3 .

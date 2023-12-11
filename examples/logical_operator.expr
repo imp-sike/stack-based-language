@@ -1,0 +1,35 @@
+## Equal  comparision
+"Equal Comparision" outs
+1 2 = .
+1 1 = .
+
+## Not Equals comparision
+"Not Equal Comparision" outs
+1 2 != .
+1 1 != .
+
+## Greater than comparision
+"Greater Than Comparision" outs
+1 2 > .
+2 1 > .
+2 2 > .
+
+
+## Greater than equal to comparision
+"Greater Than Equals Comparision" outs
+1 2 >= .
+2 1 >= .
+2 2 >= .
+
+
+## Smaller then comparision
+"Smaller Than Comparision" outs
+1 2 < .
+2 1 < .
+2 2 < .
+
+## Smaller than equal to comparision
+"Smaller Than Equals Comparision" outs
+1 2 <= .
+2 1 <= .
+2 2 <= .
