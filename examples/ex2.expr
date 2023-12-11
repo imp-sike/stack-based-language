@@ -1,0 +1,10 @@
+"Enter first number" outs
+in
+"Enter second number" outs
+in
+## Now check if they are equal
+= if 
+    "They are equal" outs
+else
+    "They are not equal" outs
+fi
