@@ -1,0 +1,8 @@
+{dup.expr}
+
+1 1 + .
+2 2 .
+
+{function.expr}
+
+call@helloworld

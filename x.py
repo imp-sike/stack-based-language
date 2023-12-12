@@ -127,6 +127,7 @@ programcode = ""
 functioncodes = ""
 isCurrentFunction = False
 
+newfile1 = w.resolve_references(fpath)
 newfile = w.process_file(fpath)
 with open(newfile) as source:
     for line in source:
@@ -508,6 +509,7 @@ try:
      pass
 except:
     subprocess.call(["rm", basename + ".asm"])
+    subprocess.call(["rm", basename + ".expr.i1"])
+    subprocess.call(["rm", basename + ".expr.intermediate"])
     pass
-subprocess.call(["rm", basename + ".expr.intermediate"])
 subprocess.call(["rm", basename + ".o"])

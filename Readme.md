@@ -71,5 +71,9 @@ call@helloworld
 ```
     store@x  ## pop and stores in x variable
     push@x   ## pushes the value of x to stack
+```
 
+12. The almighty include/import/require 
+```
+    {path/to/filename.expr}
 ```
