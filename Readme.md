@@ -1,5 +1,6 @@
 # Stack Based Language
-Currently supported operations.
+Currently supported operations. Does not support floating points. 
+(NOTE TO MYSELF: check SIMD instructions)
 
 1. Direct Numbers
 Inserts the number to the top of the stack.

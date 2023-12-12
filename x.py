@@ -230,7 +230,7 @@ for c in range(len(programcode.split(" "))):
         program.append(pushx(word))
     else:
         # word is push
-        program.append(push(int(word)))
+        program.append(push(w.parse_number(word)))
 
 append("section .data")
 append('    format db "%d", 0')

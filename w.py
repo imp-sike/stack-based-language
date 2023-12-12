@@ -35,3 +35,13 @@ def resolve_references(file_path):
 
     with open(file_path + ".i1", 'w') as outfile:
         outfile.writelines(resolved_lines)
+
+def parse_number(word):
+    try:
+        result = int(word)
+    except ValueError:
+        try:
+            result = float(word)
+        except ValueError:
+            raise ValueError("Could not parse the word as a number")
+    return result
