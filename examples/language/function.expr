@@ -1,0 +1,7 @@
+## Function can operate on stack
+func@helloworld 
+    "Hello World." outs
+cnuf@helloworld
+
+
+call@helloworld

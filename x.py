@@ -39,6 +39,11 @@ INC = iota()
 PP = iota()
 LABEL = iota()
 GOTO = iota()
+FUNCSTART = iota()
+FUNCEND = iota()
+FUNCCALL = iota()
+STOREX = iota()
+PUSHX = iota()
 
 def push(value):
     return (PUSH, value)
@@ -103,7 +108,24 @@ def label(word):
 def goto(word):
     return (GOTO,  word)
 
+def functionstarts(word):
+    return (FUNCSTART, word)
+
+def functionends(word):
+    return (FUNCEND, word)
+
+def functioncall(word):
+    return (FUNCCALL, word)
+
+def storex(word):
+    return (STOREX, word)
+
+def pushx(word):
+    return (PUSHX, word)
+
 programcode = ""
+functioncodes = ""
+isCurrentFunction = False
 
 newfile = w.process_file(fpath)
 with open(newfile) as source:
@@ -121,7 +143,11 @@ finalcode = ""
 
 def append(data2):
     global finalcode
-    finalcode = finalcode + data2 + "\n"
+    global functioncodes
+    if isCurrentFunction:
+        functioncodes = functioncodes + data2 + '\n'
+    else:
+        finalcode = finalcode + data2 + "\n"
 
 def create_string(varname,value):
     global finalcode
@@ -129,7 +155,11 @@ def create_string(varname,value):
             ";---- ELEMENT DATA ----",
             varname + " db '" + value.replace("&nbsp;", " ") +"',0xA\n" + varname + "_len equ $ - " + varname + "\n;---- ELEMENT DATA ----")
 
-
+def add_variable(word):
+    global finalcode 
+    finalcode = finalcode.replace(
+        ";---- ELEMENT BSS ----",
+        word + "  resd 1\n;---- ELEMENT BSS ----")
 
 for c in range(len(programcode.split(" "))):
     word = programcode.split(" ")[c]
@@ -187,6 +217,16 @@ for c in range(len(programcode.split(" "))):
         program.append(label(word))
     elif word.startswith("goto@"):
         program.append(goto(word))
+    elif word.startswith("func@"):
+        program.append(functionstarts(word))
+    elif word.startswith("cnuf@"):
+        program.append(functionends(word))
+    elif word.startswith("call@"):
+        program.append(functioncall(word))
+    elif word.startswith("store@"):
+        program.append(storex(word))
+    elif word.startswith("push@"):
+        program.append(pushx(word))
     else:
         # word is push
         program.append(push(int(word)))
@@ -196,6 +236,7 @@ append('    format db "%d", 0')
 append(";---- ELEMENT DATA ----")
 append("section .bss")
 append(" num resb 10     ; Buffer to store user input")
+append(";---- ELEMENT BSS ----")
 append("section .text")
 append("dump:")
 append("    mov     r9, -3689348814741910323")
@@ -270,6 +311,8 @@ append("    jmp .next_digit   ; Repeat the process")
 append("")
 append(".found_null:")
 append("    ret")
+append(";-----FUNCTION DATA-----")
+append("")
 
 append("     global _start")
 append("_start:")
@@ -412,6 +455,25 @@ for ip in range(len(program)):
     elif instrn == GOTO:
         append("    ; goto")
         append("    jmp labbel" + value.split("@")[1])
+    elif instrn == FUNCCALL:
+        append("   ; call a function")
+        append("    call fun_" + value.split("@")[1])
+    elif instrn == FUNCEND:
+        append("   ; function ends here")
+        append("   ret")
+        isCurrentFunction = False
+    elif instrn == FUNCSTART:
+        isCurrentFunction = True
+        append("   ; function starts here")
+        append("fun_" + value.split("@")[1]+ ":")
+    elif instrn == STOREX:
+        add_variable("var_" + value.split("@")[1])
+        append("   pop rax")
+        append("   mov [var_" + value.split("@")[1] +"], rax")
+    elif instrn == PUSHX:
+        append("    ; push memory to stack")
+        append("    mov rax, [var_" + value.split("@")[1] +"]")
+        append("    push rax")
 
 
 append("    ; Exit the program")
@@ -421,6 +483,18 @@ append("     xor ebx, ebx       ")
 append("    ; Exit code 0")
 append("    int 0x80")
 append("    ; Make system call")
+
+
+
+# preprocess function blocks
+def insert_function_to_top():
+    global functioncodes
+    global finalcode
+    functioncodes = functioncodes + ";-----FUNCTION DATA-----"+ "\n"
+    finalcode = finalcode.replace(";-----FUNCTION DATA-----", functioncodes)
+
+insert_function_to_top()
+
 
 outputFile = fpath.replace(".expr", ".asm")
 basename = fpath.replace(".expr", "")

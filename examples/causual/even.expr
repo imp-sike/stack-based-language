@@ -1,0 +1,12 @@
+"----------------------------" outs
+
+"Enter the last number: " outs
+in store@x
+
+0
+label@even
+  pp 2 +
+  dup push@x >= if 
+    goto@even
+  fi
+"End of Program" outs

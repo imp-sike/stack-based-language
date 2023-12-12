@@ -49,3 +49,27 @@ fi
 32 dup . .
 ```
 Output: 32 32
+
+9. goto
+```
+    label@labelname
+        ## code
+        goto@labelname
+```
+
+10. functions
+```
+## Function can operate on stack data only
+func@helloworld 
+    "Hello World." outs
+cnuf@helloworld
+
+call@helloworld
+```
+
+11. store@ and read@ operation
+```
+    store@x  ## pop and stores in x variable
+    push@x   ## pushes the value of x to stack
+
+```
