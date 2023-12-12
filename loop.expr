@@ -1,5 +1,0 @@
-10 @=x ## x = 10 in memory
-@x 0 = loop
-    @x 1 +
-    @x m. 
-pool

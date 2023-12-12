@@ -34,6 +34,11 @@ FI = iota()
 OUTS = iota()
 NOP = iota()
 INS = iota()
+DUP = iota()
+INC = iota()
+PP = iota()
+LABEL = iota()
+GOTO = iota()
 
 def push(value):
     return (PUSH, value)
@@ -83,6 +88,21 @@ def nop():
 def ins():
     return (INS, 0)
 
+def dup():
+    return (DUP, 0)
+
+def  inc():
+    return (INC, 0)
+
+def pp():
+    return (PP, 0)
+
+def label(word):
+    return (LABEL, word)
+
+def goto(word):
+    return (GOTO,  word)
+
 programcode = ""
 
 newfile = w.process_file(fpath)
@@ -119,7 +139,7 @@ for c in range(len(programcode.split(" "))):
         program.append(sub())
     elif word == ".":
         program.append(dump())
-    elif word == "=":
+    elif word == "==":
         program.append(equals())
     elif word == ">":
         program.append(greater_than())
@@ -139,8 +159,11 @@ for c in range(len(programcode.split(" "))):
         elem = stack_cross_reference.pop()
         if program[elem][1] == 0:
             program[elem] = (IFF, c)
-        slem = else_cross_reference.pop()
-        program[slem] = (ELSEF, c)
+        try:
+            slem = else_cross_reference.pop()
+            program[slem] = (ELSEF, c)
+        except:
+            None
     elif word == "else":
         program.append(elsef())
         elem = stack_cross_reference.pop()
@@ -154,6 +177,16 @@ for c in range(len(programcode.split(" "))):
         program.append(outs(outs_strs.pop()))
     elif word == "in":
         program.append(ins())
+    elif word == "dup":
+        program.append(dup())
+    elif word == "++":
+        program.append(inc())
+    elif word == "pp":
+        program.append(pp()) # peek and print
+    elif word.startswith("label@"):
+        program.append(label(word))
+    elif word.startswith("goto@"):
+        program.append(goto(word))
     else:
         # word is push
         program.append(push(int(word)))
@@ -354,11 +387,31 @@ for ip in range(len(program)):
     elif instrn == NOP:
         append("    ; nop")
         append("")
+    elif instrn == DUP:
+        append("    ; pop, push, push = dup")
+        append("     pop rax")
+        append("     push rax")
+        append("     push rax")
     elif instrn == INS:
         append("    ; input the data and push on stack")
         append("    call get_input_and_push")
         append("    push rdi          ; Push the integer onto the stack")
-
+    elif instrn  == INC:
+        append("    ; increment stack value")
+        append("    pop rax")
+        append("    inc rax")
+        append("    push rax")
+    elif instrn == PP:
+        append("    ; peek and print")
+        append("    pop rdi")
+        append("    push rdi")
+        append("    call dump")
+    elif instrn == LABEL:
+        append("    ; label")
+        append("    labbel" + value.split("@")[1]+":")
+    elif instrn == GOTO:
+        append("    ; goto")
+        append("    jmp labbel" + value.split("@")[1])
 
 
 append("    ; Exit the program")

@@ -1,0 +1,19 @@
+## Loop
+"Prints first 10 natural numbers" outs
+1
+label@natural
+  pp ++
+  dup 10 >= if 
+    goto@natural
+  fi
+"End of Program" outs
+## Now even numbers
+"----------------------------" outs
+"Prints first 10 even numbers" outs
+0
+label@even
+  pp 2 +
+  dup 10 >= if 
+    goto@even
+  fi
+"End of Program" outs
